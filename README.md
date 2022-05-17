@@ -16,7 +16,7 @@
 ## Libraries
 - Minimum SDK level 23
 - [Kotlin](https://kotlinlang.org/)
-- [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/)
+- [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 - Jetpack
   - Lifecycle - Observar os ciclos de vida do Android e lidar com os estados da interface do usuário nas alterações do ciclo de vida.
   - ViewModel - Gerenciamento da UI.
