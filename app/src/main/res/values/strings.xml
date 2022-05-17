@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Lista de Eventos</string>
+    <string name="action_settings">Configurações</string>
+    <string name="events_fragment_label">Lista de Eventos</string>
+    <string name="detail_fragment_label">Detalhes do Evento</string>
+    <string name="content_description">imagem</string>
+    <string name="title">Título</string>
+    <string name="map">Mapa</string>
+    <string name="money">valor</string>
+    <string name="unexpected_failure">Lista Vazia</string>
+    <string name="not_found">Não localizamos o item</string>
+    <string name="selection">Selecionar</string>
+    <string name="prompt_email">E-mail</string>
+    <string name="username">Nome de usuário</string>
+    <string name="prompt_password">Senha</string>
+    <string name="set_password">Confirmar Senha</string>
+    <string name="action_sign_in">Entrar ou Registrar</string>
+    <string name="register_and_sign_in">Cadastrar e Entrar</string>
+    <string name="register">Cadastrar</string>
+    <string name="action_sign_in_short">Entrar</string>
+    <string name="invalid_email">E-mail inválido</string>
+    <string name="failure_register">Falha no cadastro </string>
+    <string name="failure_checking">Falha ao realizar o check-In </string>
+    <string name="success_checking">Check-In realizado com Sucesso </string>
+    <string name="invalid_empty">O campo não pode ser vazio</string>
+    <string name="no_record">Não existe nenhum registro</string>
+    <string name="invalid_password">A senha deve ter mais de 5 caracteres</string>
+    <string name="invalid_password_equal">A senha deve ser igual</string>
+    <string name="invalid_login">Login ou senha inválido</string>
+    <string name="login_failed">Falha na autenticação</string>
+    <string name="saved_username_key">username</string>
+    <string name="saved_email_key">email</string>
+    <string name="saved_password_key">password</string>
+    <string name="login">Login</string>
+    <string name="not_event_list">Nenhum evento localizado\n:(</string>
+</resources>
