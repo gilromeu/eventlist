@@ -4,8 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.*
 import br.com.eventlist.R
+import br.com.eventlist.data.repository.LoginRepository
 import br.com.eventlist.domain.model.CheckIn
-import br.com.eventlist.domain.usecase.GetEventUseCase
+import br.com.eventlist.domain.usecase.GetEvent
 import br.com.eventlist.domain.usecase.PostCheckIn
 import br.com.eventlist.presenter.model.EventUiModel
 import br.com.eventlist.presenter.model.toUiModel
@@ -13,9 +14,10 @@ import br.com.eventlist.presenter.util.Resource
 import kotlinx.coroutines.launch
 
 class EventDetailViewModel(
+    private val loginRepository: LoginRepository,
     private val sharedPref: SharedPreferences,
     private val postCheckIn: PostCheckIn,
-    private val getEventUseCase: GetEventUseCase
+    private val getEvent: GetEvent
 ) : ViewModel() {
 
     private val _event = MutableLiveData<Resource<EventUiModel>>()
@@ -24,11 +26,15 @@ class EventDetailViewModel(
     private val _checkIn= MutableLiveData<Resource<String>>()
     val checkIn: LiveData<Resource<String>> = _checkIn
 
+    init {
+        loginRepository.loadUser()
+    }
+
     fun getEvent(context: Context, id: String) {
         _event.postValue(Resource.loading(null))
         try {
             viewModelScope.launch {
-                val event = getEventUseCase(id)
+                val event = getEvent(id)
                 if (event != null) {
                     _event.postValue(
                         Resource.success(event.toUiModel())
@@ -50,10 +56,15 @@ class EventDetailViewModel(
         }
     }
 
-    fun checkIn(context: Context, checkIn: CheckIn) {
+    fun checkIn(context: Context, eventId: String) {
         _checkIn.postValue(Resource.loading(null))
         try {
             viewModelScope.launch {
+                val checkIn = CheckIn(
+                    eventId,
+                    loginRepository.user?.name ?: "",
+                    loginRepository.user?.email ?: ""
+                )
                 val success = postCheckIn.invoke(checkIn)
                 if (success) {
                     _checkIn.postValue(
@@ -85,20 +96,5 @@ class EventDetailViewModel(
             val json = sharedPref.getString(eventId, null)
             json != null
         } catch (e: Exception) { false }
-    }
-
-    class Factory(
-        private val sharedPref: SharedPreferences,
-        private val postCheckIn: PostCheckIn,
-        private val getEventUseCase: GetEventUseCase
-    ) : ViewModelProvider.Factory {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(EventDetailViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return EventDetailViewModel(sharedPref, postCheckIn, getEventUseCase) as T
-            }
-            throw IllegalArgumentException("Classe ViewModel inválida")
-        }
     }
 }

@@ -1,10 +1,10 @@
 package br.com.eventlist.domain.usecase
 
-import br.com.eventlist.data.repository.EventRepository
+import br.com.eventlist.data.repository.EventRepositoryImpl
 import br.com.eventlist.domain.model.CheckIn
 
 class PostCheckIn(
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepositoryImpl
 ) : PostCheckInUseCase {
 
     override suspend fun invoke(checkIn: CheckIn) =

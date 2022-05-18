@@ -1,7 +1,6 @@
 package br.com.eventlist.presenter.login
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.lifecycle.*
 import br.com.eventlist.R
 import br.com.eventlist.data.repository.LoginRepository
@@ -29,14 +28,14 @@ class LoginViewModel(
     private val _isLoggedIn = MutableLiveData<Resource<Boolean>>()
     val isLoggedIn: LiveData<Resource<Boolean>> = _isLoggedIn
 
-    fun loadUser(context: Context, sharedPref: SharedPreferences) {
-        loginRepository.loadUser(context, sharedPref)
+    fun loadUser() {
+        loginRepository.loadUser()
         _isLoggedIn.value = Resource.success(loginRepository.isLoggedIn)
     }
 
-    fun login(context: Context, sharedPref: SharedPreferences, email: String, password: String) {
+    fun login(context: Context, email: String, password: String) {
 
-        val result = loginRepository.login(context, sharedPref, email, password)
+        val result = loginRepository.login(email, password)
 
         if (result.user != null) {
             if (result.isIncorrectPassword) {
@@ -57,13 +56,12 @@ class LoginViewModel(
 
     fun register(
         context: Context,
-        sharedPref: SharedPreferences,
         username: String,
         email: String,
         password: String
     ) {
         _registerResult.value = Resource.loading(null)
-        val result = loginRepository.register(context, sharedPref, username, email, password)
+        val result = loginRepository.register(username, email, password)
         if (result == null) {
             _registerResult.value = Resource.error(
                 context.getString(R.string.failure_register), ResultLogin.ERROR
@@ -101,19 +99,6 @@ class LoginViewModel(
             }
         } else {
             _registerForm.value = RegisterFormState(isDataValid = true)
-        }
-    }
-
-    class LoginViewModelFactory : ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-                return LoginViewModel(
-                    loginRepository = LoginRepository()
-                ) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

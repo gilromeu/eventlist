@@ -6,7 +6,10 @@ import br.com.eventlist.R
 import br.com.eventlist.domain.model.User
 import br.com.eventlist.presenter.model.LoggedInUser
 
-class LoginRepository {
+class LoginRepository(
+    private val context: Context,
+    private val sharedPref: SharedPreferences,
+) {
 
     var user: User? = null
         private set
@@ -23,13 +26,11 @@ class LoginRepository {
     }
 
     fun login(
-        context: Context,
-        sharedPref: SharedPreferences,
         email: String,
         password: String
     ): LoggedInUser {
 
-        val result = getUser(context, sharedPref)
+        val result = getLoggedInUser()
 
         return if (result == null) {
             this.user = null
@@ -41,16 +42,14 @@ class LoginRepository {
     }
 
     fun register(
-        context: Context,
-        sharedPref: SharedPreferences,
         username: String,
         email: String,
         password: String
     ): User? {
 
-        val result = saveUser(context, sharedPref, username, email, password)
+        val result = saveUser(username, email, password)
         return if (result) {
-            this.user = getUser(context, sharedPref)
+            this.user = getLoggedInUser()
             this.user
         } else {
             null
@@ -58,8 +57,6 @@ class LoginRepository {
     }
 
     private fun saveUser(
-        context: Context,
-        sharedPref: SharedPreferences,
         username: String,
         email: String,
         password: String
@@ -77,11 +74,11 @@ class LoginRepository {
         }
     }
 
-    fun loadUser(context: Context, sharedPref: SharedPreferences) {
-        this.user = getUser(context, sharedPref)
+    fun loadUser() {
+        getLoggedInUser()
     }
 
-    private fun getUser(context: Context, sharedPref: SharedPreferences): User? {
+    private fun getLoggedInUser(): User? {
         return try {
             val username =
                 sharedPref.getString(context.getString(R.string.saved_username_key), null)

@@ -1,6 +1,5 @@
 package br.com.eventlist.presenter.login
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,16 +8,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import br.com.eventlist.R
 import br.com.eventlist.databinding.FragmentRegisterBinding
 import br.com.eventlist.presenter.util.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : Fragment() {
 
-    private lateinit var loginViewModel: LoginViewModel
+    private val loginViewModel: LoginViewModel by viewModel()
     private val args: RegisterFragmentArgs by navArgs()
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
@@ -44,10 +43,6 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loginViewModel = ViewModelProvider(this,
-            LoginViewModel.LoginViewModelFactory()
-        )[LoginViewModel::class.java]
-
         usernameEditText = binding.username
         emailEditText = binding.email
         passwordEditText = binding.password
@@ -60,7 +55,6 @@ class RegisterFragment : Fragment() {
         registerButton?.setOnClickListener {
             loginViewModel.register(
                 requireContext(),
-                requireActivity().getPreferences(Context.MODE_PRIVATE),
                 usernameEditText?.text.toString(),
                 emailEditText?.text.toString(),
                 passwordEditText?.text.toString()

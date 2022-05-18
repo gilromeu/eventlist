@@ -1,6 +1,5 @@
 package br.com.eventlist.presenter.list
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,38 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
-import br.com.eventlist.data.repository.EventRepositoryImpl
-import br.com.eventlist.data.api.EventApi
-import br.com.eventlist.data.api.ServiceApi
 import br.com.eventlist.databinding.FragmentEventsBinding
-import br.com.eventlist.domain.usecase.GetEvents
 import br.com.eventlist.presenter.adapter.EventsAdapter
 import br.com.eventlist.presenter.model.EventUiModel
 import br.com.eventlist.presenter.util.Status
 import br.com.eventlist.presenter.util.hide
 import br.com.eventlist.presenter.util.show
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EventsFragment : Fragment() {
 
     private var _binding: FragmentEventsBinding? = null
-    private lateinit var viewModel: EventsViewModel
+    private val viewModel: EventsViewModel by viewModel()
     private lateinit var load: ConstraintLayout
     private val binding get() = _binding!!
     private lateinit var messageTextView: TextView
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val factory = EventsViewModel.Factory(
-            GetEvents(
-                EventRepositoryImpl(
-                    requireActivity().getPreferences(Context.MODE_PRIVATE),
-                    ServiceApi().createService(EventApi::class.java)
-                )
-            )
-        )
-        viewModel = ViewModelProvider(this, factory)[EventsViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

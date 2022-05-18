@@ -1,23 +1,14 @@
 package br.com.eventlist.presenter.detail
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import br.com.eventlist.R
-import br.com.eventlist.data.repository.EventRepositoryImpl
-import br.com.eventlist.data.api.EventApi
-import br.com.eventlist.data.api.ServiceApi
-import br.com.eventlist.data.repository.LoginRepository
 import br.com.eventlist.databinding.FragmentEventDetailBinding
-import br.com.eventlist.domain.model.CheckIn
-import br.com.eventlist.domain.usecase.GetEvent
-import br.com.eventlist.domain.usecase.PostCheckIn
 import br.com.eventlist.presenter.model.EventUiModel
 import br.com.eventlist.presenter.util.*
 import com.bumptech.glide.Glide
@@ -25,41 +16,18 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EventDetailFragment : Fragment() {
 
     private var _binding: FragmentEventDetailBinding? = null
-    private lateinit var viewModel: EventDetailViewModel
+    private val viewModel: EventDetailViewModel by viewModel()
     private val arg: EventDetailFragmentArgs by navArgs()
-    private var name: String = ""
-    private var email: String = ""
     private var eventUiModel: EventUiModel? = null
     private var _isCheckIn = false
     private lateinit var load: ConstraintLayout
 
     private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val loginRepository = LoginRepository()
-        loginRepository.loadUser(
-            requireContext(),
-            requireActivity().getPreferences(Context.MODE_PRIVATE)
-        )
-        name = loginRepository.user?.name ?: ""
-        email = loginRepository.user?.email ?: ""
-
-        val repository = EventRepositoryImpl(
-            requireActivity().getPreferences(Context.MODE_PRIVATE),
-            ServiceApi().createService(EventApi::class.java)
-        )
-        val factory = EventDetailViewModel.Factory(
-            requireActivity().getPreferences(Context.MODE_PRIVATE),
-            PostCheckIn(repository), GetEvent(repository)
-        )
-        viewModel = ViewModelProvider(this, factory)[EventDetailViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +37,7 @@ class EventDetailFragment : Fragment() {
         _binding = FragmentEventDetailBinding.inflate(inflater, container, false)
         binding.toolbarDetail.title = arg.title
         load = binding.load.layoutLoadAnimation
+
         return binding.root
     }
 
@@ -78,11 +47,7 @@ class EventDetailFragment : Fragment() {
         isCheckIn()
 
         binding.buttonCheckIn.setOnClickListener {
-
-            viewModel.checkIn(
-                requireActivity(),
-                CheckIn(arg.id, name, email)
-            )
+            viewModel.checkIn(requireActivity(),arg.id)
         }
 
         binding.buttonSharing.setOnClickListener {

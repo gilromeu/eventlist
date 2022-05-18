@@ -1,7 +1,5 @@
 package br.com.eventlist.presenter.login
 
-import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,10 +13,11 @@ import androidx.navigation.findNavController
 import br.com.eventlist.R
 import br.com.eventlist.databinding.FragmentLoginBinding
 import br.com.eventlist.presenter.util.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment() {
 
-    private lateinit var loginViewModel: LoginViewModel
+    private val loginViewModel: LoginViewModel by viewModel()
     private var _binding: FragmentLoginBinding? = null
 
     private val binding get() = _binding!!
@@ -43,15 +42,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loginViewModel = ViewModelProvider(
-            this,
-            LoginViewModel.LoginViewModelFactory()
-        )[LoginViewModel::class.java]
-
-        loginViewModel.loadUser(
-            requireContext(),
-            requireActivity().getPreferences(Context.MODE_PRIVATE),
-        )
+        loginViewModel.loadUser()
 
         emailEditText = binding.email
         passwordEditText = binding.password
@@ -155,7 +146,6 @@ class LoginFragment : Fragment() {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
                             requireContext(),
-                            requireActivity().getPreferences(Context.MODE_PRIVATE),
                             emailEditText?.text.toString(),
                             passwordEditText?.text.toString()
                         )
@@ -167,7 +157,6 @@ class LoginFragment : Fragment() {
                 load.show()
                 loginViewModel.login(
                     requireContext(),
-                    requireActivity().getPreferences(Context.MODE_PRIVATE),
                     emailEditText?.text.toString(),
                     passwordEditText?.text.toString()
                 )
