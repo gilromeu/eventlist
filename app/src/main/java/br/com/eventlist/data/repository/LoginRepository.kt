@@ -75,7 +75,7 @@ class LoginRepository(
     }
 
     fun loadUser() {
-        getLoggedInUser()
+        this.user = getLoggedInUser()
     }
 
     private fun getLoggedInUser(): User? {

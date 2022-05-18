@@ -42,8 +42,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loginViewModel.loadUser()
-
         emailEditText = binding.email
         passwordEditText = binding.password
         loginButton = binding.loginButton
@@ -51,6 +49,8 @@ class LoginFragment : Fragment() {
         observer(view)
 
         validate()
+
+        loginViewModel.loadUser()
     }
 
     private fun observer(view: View) {
